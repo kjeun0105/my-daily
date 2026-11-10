@@ -1,37 +1,298 @@
+/* 색상 등 공통 값 (라이트 모드) */
 :root {
   --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --accent: #aa3bff;
+  --text-h: #1a1523;
+  --bg: #f6f5fa;
+  --surface: #fff;
+  --border: #e9e7ee;
+  --accent: #9b3bf0;
+  --accent-soft: rgba(155, 59, 240, 0.12);
+  --on-accent: #fff; /* 보라색 버튼 위 글자색 */
+  --danger: #e5484d;
+  --shadow: 0 1px 2px rgba(26, 21, 35, 0.04), 0 8px 24px rgba(26, 21, 35, 0.06);
+  --radius: 14px;
 
-  font: 16px/1.5 system-ui, 'Segoe UI', Roboto, sans-serif;
+  font: 16px/1.5 system-ui, 'Segoe UI', Roboto, 'Malgun Gothic', sans-serif;
   color-scheme: light dark;
   color: var(--text);
   background: var(--bg);
 }
 
+/* 다크 모드 */
 @media (prefers-color-scheme: dark) {
   :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
+    --text: #a1a1aa;
+    --text-h: #f4f4f5;
+    --bg: #111116;
+    --surface: #1b1b22;
+    --border: #2c2c36;
     --accent: #c084fc;
+    --accent-soft: rgba(192, 132, 252, 0.16);
+    --on-accent: #1a1523;
+    --danger: #ff6b6f;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.3);
   }
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  background: var(--bg);
 }
 
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+/* 키보드(Tab)로 이동할 때만 보이는 포커스 표시 */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 전체 레이아웃 */
 .app {
   max-width: 560px;
   margin: 0 auto;
-  padding: 48px 16px;
+  padding: 56px 16px 80px;
+}
+
+.app-header {
+  margin-bottom: 24px;
 }
 
 h1 {
   color: var(--text-h);
-  margin: 0 0 8px;
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.today {
+  margin: 6px 0 0;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* 입력창 + 추가 버튼 */
+.todo-input {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.todo-input input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text-h);
+  font: inherit;
+  box-shadow: var(--shadow);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.todo-input input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.todo-input button {
+  padding: 0 20px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+  box-shadow: var(--shadow);
+  transition: filter 0.15s, transform 0.1s;
+}
+
+.todo-input button:hover {
+  filter: brightness(1.08);
+}
+
+.todo-input button:active {
+  transform: scale(0.97);
+}
+
+/* 필터와 목록을 감싸는 카드 */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* 필터 영역 */
+.todo-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.todo-filter-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.todo-filter-buttons button {
+  padding: 4px 12px;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  color: var(--text);
+  transition: background 0.15s, color 0.15s;
+}
+
+.todo-filter-buttons button:hover {
+  color: var(--text-h);
+}
+
+.todo-filter-buttons button.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.todo-count {
+  margin-left: auto;
+}
+
+.todo-clear {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--text);
+}
+
+.todo-clear:hover:not(:disabled) {
+  color: var(--danger);
+}
+
+.todo-clear:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* 할 일 목록 */
+.todo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+.todo-item:hover {
+  background: var(--accent-soft);
+}
+
+/* 체크박스와 글자를 묶어서 글자를 눌러도 체크되게 한다 */
+.todo-label {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.todo-label input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.todo-text {
+  color: var(--text-h);
+  overflow-wrap: anywhere; /* 긴 글자도 카드 밖으로 넘치지 않게 */
+  transition: color 0.15s;
+}
+
+.todo-item.done .todo-text {
+  color: var(--text);
+  text-decoration: line-through;
+}
+
+.todo-delete {
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  padding: 4px;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.todo-delete:hover {
+  color: var(--danger);
+}
+
+/* 마우스가 있는 기기에서는 줄에 올렸을 때만 삭제 버튼을 보여 준다 */
+@media (hover: hover) {
+  .todo-delete {
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  .todo-item:hover .todo-delete,
+  .todo-delete:focus-visible {
+    opacity: 1;
+  }
+}
+
+.todo-empty {
+  margin: 0;
+  padding: 40px 16px;
+  text-align: center;
+}
+
+/* 휴대폰처럼 좁은 화면 */
+@media (max-width: 480px) {
+  .app {
+    padding-top: 32px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  /* 필터 버튼은 윗줄, 남은 개수와 완료 지우기는 아랫줄 */
+  .todo-filter-buttons {
+    width: 100%;
+  }
+
+  .todo-count {
+    margin-left: 0;
+  }
+
+  .todo-clear {
+    margin-left: auto;
+  }
 }
